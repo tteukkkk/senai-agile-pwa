@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<section class="container" style="max-width: 540px;">
+    <div class="perfil-container">
+        <h2 style="text-align: left;">Perfil do Aluno</h2>
+        {% if aluno.foto and aluno.foto.url %}
+        <img src="{{ aluno.foto.url }}" alt="Foto de {{ aluno.nome }}" class="perfil-foto" width="160" height="160"
+            style="object-fit:cover;">
+        {% else %}
+        <img src="{% static 'icons/default-user.png' %}" alt="Sem foto" class="perfil-foto" width="160" height="160" style="object-fit:cover; opacity: 0.55;">
+        {% endif %}
+        <ul class="perfil-dados">
+            <li><strong>Nome:</strong> {{ aluno.nome }}</li>
+            <li><strong>Email:</strong> {{ aluno.email }}</li>
+            <li><strong>Telefone:</strong> {{ aluno.telefone }}</li>
+            <li><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento|date:"d/m/Y" }}</li>
+        </ul>
+        <h3 style="margin-bottom:12px; color: var(--primary-blue); font-size: 1.25rem;">Cursos Matriculados</h3>
+        <ul class="perfil-cursos">
+            {% for curso in aluno.curso.all %}
+            <li>
+                <span style="color:var(--primary-red); font-weight:500;">
+                    {{ curso.nome }}
+                </span>
+                <span style="color:var(--neutral-gray); font-size:0.96em;">
+                    ({{ curso.carga_horaria }}h)
+                </span>
+            </li>
+            {% empty %}
+            <li style="color: var(--neutral-gray);">Não matriculado em nenhum curso.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endblock %}

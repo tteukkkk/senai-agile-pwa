@@ -1,0 +1,8 @@
+{% extends './base.html' %}
+{% block content %}
+<div class="alert-success">
+    <h3>Operação realizada com sucesso!</h3>
+    <p>{{ mensagem|default:"Seu cadastro/ação foi registrada." }}</p>
+    <a href="{% url 'noticias' %}" class="btn">Voltar para início</a>
+</div>
+{% endblock %}

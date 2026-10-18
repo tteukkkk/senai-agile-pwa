@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+
+<head>
+    <!-- Configuração básica do PWA -->
+    <meta charset="UTF-8" />
+    <!-- Viewport essencial para PWA mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SENAI Agile</title>
+    <!-- 1. Manifest: Arquivo com metadados do PWA (nome, ícones, tema, etc) -->
+    <link rel="manifest" href="{% static 'manifest.json' %}" />
+    <!-- 2. Cor do tema: Define a cor da barra de endereço em dispositivos móveis -->
+    <meta name="theme-color" content="#E60012" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <!-- 3. Ícone do PWA: Exibido na home screen quando instalado -->
+    <link rel="icon" href="{% static 'icons/icon-192x192.png' %}" />
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'noticias' %}" class="nav-brand">SENAI</a>
+            <button class="nav-toggle" aria-label="Abrir menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li>
+                    <a href="{% url 'noticias' %}">Notícias</a>
+                </li>
+                <li>
+                    <a href="{% url 'cursos' %}">Cursos</a>
+                </li>
+                <li>
+                    <a href="{% url 'cadastro_aluno' %}">Perfil</a>
+                </li>
+                <li>
+                    <a href="{% url 'lista_alunos' %}">Alunos</a>
+                </li>
+                <li>
+                    <a href="{% url 'contato' %}">Contato</a>
+                </li>
+                <li>
+                    <a href="{% url 'localizacao' %}">Localização</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; {{ year|default:'2025' }} SENAI</p>
+    </footer>
+    <script>
+        // Service Worker: Verifica se o navegador suporta service workers
+        if ('serviceWorker' in navigator) {
+            // Registra o service worker usando o arquivo service-worker.js
+            navigator.serviceWorker.register("/service-worker.js")
+        }
+        // Aguarda o carregamento completo do DOM antes de executar o código
+        document.addEventListener('DOMContentLoaded', function () {
+            // Seleciona o botão de toggle do menu
+            const navToggle = document.querySelector('.nav-toggle')
+            // Seleciona o elemento do menu de navegação
+            const navMenu = document.querySelector('.nav-menu')
+            // Tenta selecionar o overlay (fundo escuro) se existir
+            let navOverlay = document.querySelector('.nav-overlay')
+            // Verifica se o overlay não existe na página
+            if (!navOverlay) {
+                // Cria dinamicamente um novo elemento div para o overlay
+                navOverlay = document.createElement('div')
+                // Adiciona a classe CSS ao overlay
+                navOverlay.className = 'nav-overlay'
+                // Insere o overlay no final do body
+                document.body.appendChild(navOverlay)
+            }
+            // Função para alternar (abrir/fechar) o menu
+            function toggleMenu() {
+                // Alterna a classe 'active' no botão (animação do hamburguer)
+                navToggle.classList.toggle('active')
+                // Alterna a classe 'active' no menu (mostra/esconde)
+                navMenu.classList.toggle('active')
+                // Alterna a classe 'active' no overlay (mostra/esconde)
+                navOverlay.classList.toggle('active')
+            }
+            // Função para fechar o menu
+            function closeMenu() {
+                // Remove a classe 'active' do botão
+                navToggle.classList.remove('active')
+                // Remove a classe 'active' do menu
+                navMenu.classList.remove('active')
+                // Remove a classe 'active' do overlay
+                navOverlay.classList.remove('active')
+            }
+            // Adiciona evento de clique ao botão do menu
+            navToggle.addEventListener('click', toggleMenu)
+            // Adiciona evento de clique ao overlay (fecha o menu ao clicar fora)
+            navOverlay.addEventListener('click', closeMenu)
+            // Fecha o menu ao clicar em qualquer link dentro do menu
+            navMenu.addEventListener('click', function (e) {
+                // Verifica se o elemento clicado é um link (<a>)
+                if (e.target.tagName === 'A') {
+                    closeMenu()
+                }
+            })
+            // Fecha o menu ao pressionar a tecla ESC
+            document.addEventListener('keydown', function (e) {
+                // Verifica se a tecla pressionada é ESC e se o menu está aberto
+                if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                    closeMenu()
+                }
+            })
+        })
+    </script>
+</body>
+</html>

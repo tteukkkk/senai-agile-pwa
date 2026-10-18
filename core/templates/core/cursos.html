@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Cursos Disponíveis</h2>
+<div class="cursos-grid">
+    {% for curso in cursos %}
+    <div class="curso-card">
+        <h3>{{ curso.nome }}</h3>
+        {% if curso.imagem %}
+        <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}" width="220" />
+        {% endif %}
+        <p><strong>Carga Horária:</strong> {{ curso.carga_horaria }}h</p>
+        <p>{{ curso.descricao|truncatechars:180 }}</p>
+        <a href="{% url 'matricula' curso.id %}" class="btn">Matricule-se</a>
+    </div>
+    {% empty %}
+    <p>Nenhum curso disponível no momento.</p>
+    {% endfor %}
+</div>
+{% endblock %}

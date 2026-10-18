@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Notícias</h2>
+<ul class="noticias-lista">
+    {% for noticia in noticias %}
+    <li class="noticia-card">
+        <h3>{{ noticia.titulo }}</h3>
+        {% if noticia.imagem %}
+        <img src="{{ noticia.imagem.url }}" alt="{{ noticia.titulo }}" width="250" />
+        {% endif %}
+        <p>{{ noticia.conteudo|truncatechars:250 }}</p>
+        <small>{{ noticia.data_publicacao|date:"d/m/Y H:i" }}</small>
+    </li>
+    {% empty %}
+    <li>Nenhuma notícia publicada.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
